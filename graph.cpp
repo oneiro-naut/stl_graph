@@ -241,13 +241,37 @@ std::vector<k_edge> Graph::MST_Kruskal() {
       std::cout << min_cost_edge.first << "\n";
     }
     
-  }
-  
+  }  
   return MST;
 }
 
-
-
+//NOTE: MST aren't unique(the case when priority queue has more than 1 min cost edge)
+std::vector<k_edge> Graph::MST_Prim() {
+  std::vector<k_edge> MST;
+  std::unordered_set<int> MSTset;
+  disjoint_set D(vertices_);
+  std::priority_queue<k_edge, std::vector<k_edge>, std::greater<k_edge>> pq;
+  std::cout << "MST(using Prim's Algorithm)\n";
+  int u = *(vertices.begin());
+  while (MSTset.size() != V_) {
+    if (MSTset.find(u) == MSTset.end()) {
+      MSTset.insert(u);
+      for (auto i : edges_[u]) {
+        pq.push(std::make_pair(i.second, std::make_pair(u, i.first))); 
+      }
+    }
+    while (!pq.empty() && D.set_union(pq.top().second.first, pq.top().second.second)) 
+      pq.pop();
+    if (!pq.empty()) {
+      MST.push_back(std::make_pair(pq.top().first, std::make_pair(pq.top().second.first, pq.top().second.second)));
+      std::cout << pq.top().second.first << " <--> " << pq.top().second.second << "\n";
+      std::cout << pq.top().first << "\n";
+      u = pq.top().second.second;
+      pq.pop();
+    } 
+  }
+  return MST;
+}
 
 int main(int argc, char **argv) {
   Graph G = Graph();
@@ -274,5 +298,6 @@ int main(int argc, char **argv) {
   //G.traverse([this](int key, std::unordered_set<int>& visited) { return bfs_util(key, visited); });
   G.bfs();
   G.MST_Kruskal();
+  G.MST_Prim();
   return 0;
 }

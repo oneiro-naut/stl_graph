@@ -11,9 +11,9 @@ typedef std::pair<int, std::pair<int, int>> k_edge; //Kruskal Edge
 
 class Graph {
  private:
-  int V_;
-  int E_;
-  int size_;
+  unsigned V_;
+  unsigned E_;
+  unsigned size_;
   std::unordered_set<int> vertices_;
   std::unordered_map<int, std::list<ipair>> edges_;
 
@@ -37,5 +37,6 @@ class Graph {
   void complete_dfs() const;
   void bfs() const;
   std::vector<k_edge> MST_Kruskal();
+  std::vector<k_edge> MST_Prim();
 };
 #endif
