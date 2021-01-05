@@ -252,7 +252,7 @@ std::vector<k_edge> Graph::MST_Prim() {
   disjoint_set D(vertices_);
   std::priority_queue<k_edge, std::vector<k_edge>, std::greater<k_edge>> pq;
   std::cout << "MST(using Prim's Algorithm)\n";
-  int u = *(vertices.begin());
+  int u = *(vertices_.begin());
   while (MSTset.size() != V_) {
     if (MSTset.find(u) == MSTset.end()) {
       MSTset.insert(u);
@@ -271,6 +271,36 @@ std::vector<k_edge> Graph::MST_Prim() {
     } 
   }
   return MST;
+}
+
+//SPT == Shortest Path Tree
+std::vector<k_edge> Graph::SPT_Dijkstra(int src) {
+  std::vector<k_edge> SPT;
+  std::unordered_set<int> SPTset;
+  disjoint_set D(vertices_);
+  std::priority_queue<k_edge, std::vector<k_edge>, std::greater<k_edge>> pq;
+  std::cout << "SPT(using Dijkstra's Algorithm)\n";
+  int u = src;
+  int prev_w = 0; //cumulative weights(difference from Prim's algorithm)
+  while (SPTset.size() != V_) {
+    if (SPTset.find(u) == SPTset.end()) {
+      SPTset.insert(u);
+      for (auto i : edges_[u]) {
+        pq.push(std::make_pair(i.second + prev_w, std::make_pair(u, i.first))); 
+      }
+    }
+    while (!pq.empty() && D.set_union(pq.top().second.first, pq.top().second.second)) 
+      pq.pop();
+    if (!pq.empty()) {
+      SPT.push_back(std::make_pair(pq.top().first, std::make_pair(pq.top().second.first, pq.top().second.second)));
+      std::cout << pq.top().second.first << " <--> " << pq.top().second.second << "\n";
+      std::cout << pq.top().first << "\n";
+      u = pq.top().second.second;
+      prev_w = pq.top().first;
+      pq.pop();
+    } 
+  }
+  return SPT;
 }
 
 int main(int argc, char **argv) {
@@ -299,5 +329,6 @@ int main(int argc, char **argv) {
   G.bfs();
   G.MST_Kruskal();
   G.MST_Prim();
+  G.SPT_Dijkstra(8);
   return 0;
 }

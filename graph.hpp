@@ -38,5 +38,6 @@ class Graph {
   void bfs() const;
   std::vector<k_edge> MST_Kruskal();
   std::vector<k_edge> MST_Prim();
+  std::vector<k_edge> SPT_Dijkstra(int src);
 };
 #endif
