@@ -1,32 +1,35 @@
-#include<iostream>
-
 #include "disjoint_set.hpp"
 
 // x is essentially the same as forest_[x].value
 // recursive parent search
 int disjoint_set::find_set(int x) {
   if (forest_.find(x) != forest_.end()) {
-    if (forest_[x].parent == forest_[x].value)
+    if (forest_[x].parent == forest_[x].value) {
       return x;
-    else
+    } else {
       return find_set(forest_[x].parent);
-  } else
+    }
+  } else {
     return -1;
+  }
 }
 
 bool disjoint_set::set_union(int val1, int val2) {
   int parent1 = find_set(val1);
   int parent2 = find_set(val2);
-  if (parent1 == parent2)
+  if (parent1 == parent2) {
     return true;    //already in the same set (can be thought of as condition for cycle in graph)
-  if (forest_[parent1].rank > forest_[parent2].rank) 
+  }
+
+  if (forest_[parent1].rank > forest_[parent2].rank) {
     forest_[parent2].parent = parent1;
-  else if (forest_[parent1].rank < forest_[parent2].rank)
+  } else if (forest_[parent1].rank < forest_[parent2].rank) {
     forest_[parent1].parent = parent2;
-  else {
+  } else {
     forest_[parent2].parent = parent1;
     forest_[parent1].rank += 1;
   }
+
   return false;
 }
 
